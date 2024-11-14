@@ -4,3 +4,4 @@ google-auth-oauthlib==0.7.1
 google-auth-httplib2==0.1.1
 pytube==15.0.0
 requests==2.31.0
+yt_delp
