@@ -11,15 +11,6 @@ import requests
 from io import BytesIO
 import pickle
 
-ydl_opts = {
-    'cookies': 'cookies.txt',
-    'format': 'best',
-    # Add other options as needed
-}
-
-with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-    info = ydl.extract_info(video_url, download=True)
-
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -35,6 +26,9 @@ SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
 
 # File to store the last uploaded video number
 UPLOAD_LOG_FILE = 'uploaded_videos_log.txt'
+
+# Path to your cookies file (e.g., exported from your browser)
+COOKIES_FILE = 'cookies.txt'  # Replace with your cookie file path
 
 def get_next_video_number():
     """Get the next video number based on the previous uploads."""
@@ -61,11 +55,9 @@ def generate_title():
 
 CUSTOM_DESCRIPTION = """Copyright Disclaimer under section 107 of the Copyright Act of 1976, allowance is made for "fair use" for purposes such as criticism, comment, news reporting, teaching, scholarship, education and research. Fair use is a use permitted by copyright statute that might otherwise be infringing.
 
-
 Welcome to Chills and Thrills! Dive into the dark with bone-chilling, true horror stories that will haunt your nights. From paranormal encounters and ghost sightings to disturbing real-life horror stories and urban legends, each tale is crafted to keep you on the edge. Whether you're drawn to eerie mysteries, haunted locations, or tales of the unknown, Chills and Thrills brings you the scariest stories, perfect for late-night listening. Subscribe and experience true terror, the unknown, and the supernatural.
 
 If you enjoyed this video, please give it a thumbs up and subscribe for more spine-chilling content every week! Don't forget to hit the bell icon to never miss a new upload
-
 
 V I D E O S    T O    W A T C H    N E X T :  
 
@@ -73,115 +65,11 @@ https://youtu.be/4LS8PC0odKU
 https://youtu.be/LXNPbX0KvOY
 https://youtu.be/4boAhgFpj1I
 
- --------------------------------------------
-
-
-
 "Sometimes you find yourself in a dark place and you think you've been buried. But actually, you've been planted."
-
-
-
- --------------------------------------------
 
 Inquiries: abrarsafin2010@gmail.com
 
-
-
-
-Tags: scary videos,ghost videos,scariest videos,horror,horror video,scary ghost videos,scary video,super scary videos,creepy videos,ghost video,horror movie,very scary video,horror short film,short horror film,horror film,best horror movie,horror story,short horror,short horror movie,5 scary ghost videos,horror short video,paranormal videos,horror stories,ghost in mirror,videos,caught on video,#horror,scary videos caught on camera
-
-mr nightmare animated,
-mr nightmare halloween,
-mr nightmare basement,
-mr nightmare reaction,
-mr nightmare creepypasta,
-mr nightmare scary stories,
-mr nightmare abandoned building,
-mr nightmare airport,
-mr nightmare attic,
-mr nightmare arcade,
-mr nightmare alien,
-mr nightmare archive,
-animated horror stories mr nightmare,
-airbnb horror stories mr nightmare,
-appalachian mountains horror stories mr nightmare
-horror story english,
-horror story english animated,
-horror story english movie,
-horror story english subtitles,
-horror story english audio,
-horror story english 1 hour,
-horror story english true story,
-horror story english writing,
-horror story english cartoon,
-horror story english short film,
-horror story english story,
-horror story english podcast,
-horror story animated english with slime,
-horror story english ai,
-horror story animated english girl,
-horror story and english,
-ghost story english anime,
-horror stories animated english compilation,
-horror stories animated english wannsee,
-horror stories animated english 1 hour,
-animated horror story english,
-american horror story english,
-a classic horror story english,
-horror animation english true story,
-horror story audio english,
-american horror story full movie english,
-english fairy tales horror story hide and seek,
-horror story in hindi and english,
-horror story book english,
-horror stories in english bloody mary,
-horror stories in british english,
-black magic horror story english,
-english horror story in bengali,
-english horror story kaise banaen,
-english horror story kaise banaye,
-baby horror story in english,
-victoria hospital bangalore horror story english,
-best horror story in english,
-horror story books in english,
-english horror movie based on true story,
-horror story based on true events in english,
-best horror story book in english,
-gulli bulli horror story in english,
-baby blue horror story in english,
-horror stories english compilation,
-creepy horror story english,
-cartoon horror story english,
-horror cartoon story in english with subtitles,
-maha cartoon tv english horror story,
-english cafe horror story,
-indian horror cartoon story in english,
-charlie charlie horror story in english,
-horror story english dubbed,
-ghost story english dub,
-horror story dance english,
-truck driver horror story english,
-radio drama horror story english,
-dominique american horror story english,
-english horror story hindi dubbed,
-delhi cantt horror story english,
-horror movie english dubbed in tamil story,
-pizza delivery horror story in english,
-serbian dancing lady horror story in english,
-dominique american horror story lyrics english,
-horror story english english,
-horror story in english essay,
-horror stories wansee entertainment english,
-english horror story explain in hindi,
-english horror story explained in kannada,
-english horror story explained in malayalam,
-horror story explanation in english,
-english horror story explained in manipuri,
-horror story explanation in english,
-english horror story malayalam explanation,
-english horror story english horror story,
-horror story essay in english,
-real horror story explained in english"""
+Tags: scary videos,ghost videos,scariest videos,horror,horror video,scary ghost videos,scary video,super scary videos,creepy videos,ghost video,horror movie,very scary video,horror short film,short horror film,horror film,best horror movie,horror story,short horror,short horror movie,5 scary ghost videos,horror short video,paranormal videos,horror stories,ghost in mirror,videos,caught on video,#horror,scary videos caught on camera"""
 
 def get_authenticated_service():
     """Authenticate and return the YouTube service object."""
@@ -222,7 +110,8 @@ def download_random_video_from_channel():
         'quiet': True,
         'skip_download': True,
         'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-        'outtmpl': '1.%(ext)s'
+        'outtmpl': '1.%(ext)s',
+        'cookiefile': COOKIES_FILE,  # Add cookie file support here
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -261,7 +150,8 @@ def download_video_and_thumbnail(video_url):
     """Download the video and thumbnail from the given URL."""
     ydl_opts = {
         'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-        'outtmpl': '1.%(ext)s'
+        'outtmpl': '1.%(ext)s',
+        'cookiefile': COOKIES_FILE,  # Add cookie file support here
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -301,22 +191,21 @@ def upload_video_to_youtube(video_file, thumbnail_file):
     video_id = response['id']
     logger.info(f"Video uploaded successfully. Video ID: {video_id}")
 
-    # Upload the thumbnail
-    youtube.thumbnails().set(
-        videoId=video_id,
-        media_body=MediaFileUpload(thumbnail_file)
-    ).execute()
-
-    logger.info(f"Thumbnail uploaded for video ID: {video_id}")
+    if thumbnail_file:
+        youtube.thumbnails().set(
+            videoId=video_id,
+            media_body=MediaFileUpload(thumbnail_file)
+        ).execute()
+        logger.info("Thumbnail uploaded successfully.")
 
     return video_id
 
-
 def main():
-    """Main function to download, upload, and manage videos."""
     video_file, thumbnail_file = download_random_video_from_channel()
     if video_file:
         upload_video_to_youtube(video_file, thumbnail_file)
+    else:
+        logger.error("No video to upload.")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
