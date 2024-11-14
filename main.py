@@ -11,6 +11,15 @@ import requests
 from io import BytesIO
 import pickle
 
+ydl_opts = {
+    'cookies': 'cookies.txt',
+    'format': 'best',
+    # Add other options as needed
+}
+
+with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    info = ydl.extract_info(video_url, download=True)
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
